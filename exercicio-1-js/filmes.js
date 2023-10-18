@@ -38,9 +38,10 @@ const filmes = [
     }
 ]
 
-const {titulo, sinopse, genero} = filmes
 
 filmes.forEach((filme) => {
+    
+    const {titulo, sinopse, genero} = filme
     
     console.log(`
     Filme: 
@@ -50,4 +51,4 @@ filmes.forEach((filme) => {
     Genero: ${genero}
     
     `);
-})
+});
