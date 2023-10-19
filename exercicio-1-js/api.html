@@ -12,14 +12,14 @@
         const url = 'https://viacep.com.br/ws/09403100/json/';
 
         //get
-        fetch(url)
-        .then((resposta) => {
+        // fetch(url)
+        // .then((resposta) => {
             //objeto promise resolvido (headers, body, others)
-            return resposta.json();
-        })
-        .then((dados) => {
+        //     return resposta.json();
+        // })
+        // .then((dados) => {
 
-            console.log(dados);
+        //     console.log(dados);
 
             // console.log(
             //     `Endereço: ${dados.logradouro}
@@ -27,10 +27,10 @@
             //     Estado: ${dados.uf}
             //     `
             // );
-        })
-        .catch((e) => {
-            console.log('Deu ruim');
-        });
+        // })
+        // .catch((e) => {
+        //     console.log('Deu ruim');
+        // });
 
 
         // .then((resp) => { //promise resolvida
@@ -43,6 +43,19 @@
         // .catch((e) => {
         //     console.log('Deu ruim!');
         // })
+
+        async function chamarApi(endereco){
+            try{
+                const promise = await fetch(endereco)
+                const dados = await promise.json();
+                console.log(dados);
+            } catch(e){
+                console.log('Deu ruim na API');
+            }
+        }
+
+        chamarApi(url); //chamada da api
+
     </script>
 </body>
 </html>
