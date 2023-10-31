@@ -1,12 +1,12 @@
 import React from 'react';
 import Titulo from '../../componentes/Titulo/Titulo';
 
-const HomePage = () => {
+const EventosPage = () => {
     return (
         <div>
-            <Titulo/>
+            <Titulo />
         </div>
     );
 };
 
-export default HomePage;
+export default EventosPage;

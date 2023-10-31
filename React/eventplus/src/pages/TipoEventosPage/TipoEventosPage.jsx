@@ -1,7 +1,7 @@
 import React from 'react';
 import Titulo from '../../componentes/Titulo/Titulo';
 
-const HomePage = () => {
+const TipoEventosPage = () => {
     return (
         <div>
             <Titulo/>
@@ -9,4 +9,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default TipoEventosPage;
