@@ -5,6 +5,8 @@ import { Route, BrowserRouter, Routes } from "react-router-dom";
 import EventosPage from "./pages/EventosPage/EventosPage";
 import HomePage from "./pages/HomePage/HomePage";
 import TipoEventosPage from "./pages/TipoEventosPage/TipoEventosPage";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import TestePage from "./pages/TestePage/TestePage";
 
 
 const Rotas = () => {
@@ -14,6 +16,8 @@ const Rotas = () => {
         <Route element={<HomePage/>} path={"/"} exact/>
         <Route element={<EventosPage/>} path={"/eventos"}/>
         <Route element={<TipoEventosPage/>} path={"/tiposeventos"}/>
+        <Route element={<LoginPage/>} path={"/login"}/>
+        <Route element={<TestePage/>} path={"/teste"}/>
       </Routes>
     </BrowserRouter>
   );
