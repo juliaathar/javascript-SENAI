@@ -5,7 +5,6 @@ import Titulo from '../../componentes/Titulo/Titulo';
 const EventosPage = () => {
     return (
         <div>
-            <Header/>
             <Titulo />
         </div>
     );
