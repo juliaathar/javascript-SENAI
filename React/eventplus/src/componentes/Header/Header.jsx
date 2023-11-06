@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Header.css";
 
 import Container from "../Container/Container";
@@ -8,6 +8,8 @@ import PerfilUsuario from "../PerfilUsuario/PerfilUsuario";
 import menubar from "../../assets/images/images/menubar.png";
 
 const Header = () => {
+  const [exibeNavbar, setExibeNavbar] = useState(false); //state do menu (exibe/esconde menu)
+
   return (
     <header className="headerpage">
       <Container>
@@ -15,8 +17,12 @@ const Header = () => {
           <img
             src={menubar}
             alt="Imagem menu de barras. Serve para ativar e exibir ou esconder o menu no smartphone"
+            onClick={() => {
+              setExibeNavbar(true);
+            }}
+            className="headerpage__menubar"
           />
-          <Nav />
+          <Nav exibeNavbar={exibeNavbar} setExibeNavbar={setExibeNavbar} />
           <PerfilUsuario />
         </div>
       </Container>
