@@ -1,11 +1,12 @@
 import React from 'react';
 import './Titulo.css'
 
-const Titulo = () => {
+const Titulo = ({titleText, color="", additionalClass= ""}) => {
     return (
-        <div>
-            <h1 className='titulo'>Hello World</h1>
-        </div>
+            <h1 className={`title ${additionalClass}`} style={{color: color}}>
+                {titleText}
+                <hr className='title__underscore' style={color !== "" ? {borderColor: color} : {}} />
+            </h1>
     );
 };
 

@@ -5,7 +5,7 @@ import Titulo from '../../componentes/Titulo/Titulo';
 const EventosPage = () => {
     return (
         <div>
-            <Titulo />
+      <Titulo titleText={"Página de Eventos"} color=''/>
         </div>
     );
 };
