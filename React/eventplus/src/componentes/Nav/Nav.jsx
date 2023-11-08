@@ -1,5 +1,5 @@
 import React from "react";
-import "./Nav.css";
+import './Nav.css';
 import logoMobile from "../../assets/images/images/logo-white.svg";
 import logoDesktop from "../../assets/images/images/logo-pink.svg";
 import { Link } from "react-router-dom"; //importando componente da biblioteca.
