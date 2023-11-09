@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import TestePage from "./pages/TestePage/TestePage";
 import Header from "./componentes/Header/Header";
 import Footer from "./componentes/Footer/Footer";
+import TestePageCopy from "./pages/TestePage copy/TestePageCopy";
 
 
 const Rotas = () => {
@@ -21,6 +22,7 @@ const Rotas = () => {
         <Route element={<TipoEventosPage/>} path={"/tiposeventos"}/>
         <Route element={<LoginPage/>} path={"/login"}/>
         <Route element={<TestePage/>} path={"/teste"}/>
+        <Route element={<TestePageCopy/>} path={"/testecopy"}/>
       </Routes>
       <Footer/>
     </BrowserRouter>

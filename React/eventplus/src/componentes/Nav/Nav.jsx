@@ -31,6 +31,7 @@ const Nav = ({ exibeNavbar, setExibeNavbar }) => {
         <Link to="/tiposeventos">Tipo de Eventos</Link>
         <Link to="/login">Login</Link>
         <Link to="/teste">Teste</Link>
+        <Link to="/testecopy">Teste useEffect</Link>
       </div>
     </nav>
   );
