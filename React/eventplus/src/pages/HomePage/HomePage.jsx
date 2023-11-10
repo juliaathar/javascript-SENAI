@@ -8,15 +8,16 @@ import VisionSection from "../../componentes/VisionSection/VisionSection";
 import Container from "../../componentes/Container/Container";
 import "./HomePage.css";
 import axios from "axios";
+import api from "../../Services/Service";
 
 const HomePage = () => {
   const [nextEvents, setNextEvents] = useState([]);
-  const urlLocal = 'https://localhost:7118/api'
+
 
   useEffect(() => {
     async function getNextEvents() {
       try {
-        const promise =  await axios.get(`${urlLocal}/Evento/ListarProximos`);
+        const promise =  await api.get(`/Evento/ListarProximos`);
         const dados = await promise.data;
 
         setNextEvents(dados);
