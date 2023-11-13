@@ -27,6 +27,7 @@
     transition: left .4s, opacity .5s;
 }
 
+
 .navbar__close {
     position: absolute;
     top: 0px;
