@@ -1,5 +1,5 @@
 import React from "react";
-import "./FormComponents.css";
+import "./FormComponentes.css";
 
 export const Input = ({
   type,
@@ -37,7 +37,7 @@ export const Button = (props) => {
       id={props.id}
       name={props.name}
       type={props.type}
-      className={props.additionalClass}
+      className={`button-component ${props.additionalClass}`}
       onClick={props.fnManipulator}
     >
       {props.textButton}
@@ -65,7 +65,7 @@ export const Select = ({
     >
       <option value="">Tipo Evento</option>
       {/* options.map(??) */}
-      {option.map((o) => {
+      {options.map((o) => {
         return (
           <option key={Math.random()} value={o.value}>
             {o.text}
