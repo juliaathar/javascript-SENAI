@@ -11,8 +11,8 @@ import TableTP from "./TableTP/TableTP";
 
 const TipoEventosPage = () => {
   const [frmEdit, setFrmEdit] = useState(false);
-  const [titulo, setTitulo] = useState(""); 
-  const [tipoEventos, setTipoEventos] = useState([]); 
+  const [titulo, setTitulo] = useState("");
+  const [tipoEventos, setTipoEventos] = useState([]);
 
   useEffect(() => {
     //define a chamada em nossa api
@@ -22,12 +22,12 @@ const TipoEventosPage = () => {
         setTipoEventos(retorno.data);
         console.log(retorno.data);
       } catch (error) {
-        console.log('Erro na api');
+        console.log("Erro na api");
       }
     }
-//chama a função/api no carregamento da página/componente
+    //chama a função/api no carregamento da página/componente
     loadEventsType();
-  }, [])
+  }, [tipoEventos]);
 
   function handleUpdate() {
     alert("Bora editar");
@@ -52,8 +52,22 @@ const TipoEventosPage = () => {
   }
 
   //apaga o tipo de evento na api
-  function handleDelete(idElement) {
-    alert("Vamos apagar o evento");
+  async function handleDelete(idTipoEvento) {
+
+    if(!window.confirm("Confirma a exclusão?")){
+      return;
+    }
+
+    try {
+      const promise = await api.delete(`${eventsTypeResource}/ ${idTipoEvento}`);
+
+      if (promise.status == 204) {
+        alert("Cadastro apagado com sucesso")
+        setTipoEventos([]);
+      }
+    } catch (error) {
+      alert("deu ruim");
+    }
   }
 
   //exibe o formulário de edição
@@ -110,7 +124,11 @@ const TipoEventosPage = () => {
         <section className="lista-eventos-section">
           <Container>
             <Titulo titleText={"Lista de tipos de eventos"} color="white" />
-            <TableTP dados={tipoEventos} fnUpdate={showUpdateForm} fnDelete={handleDelete}  />
+            <TableTP
+              dados={tipoEventos}
+              fnUpdate={showUpdateForm}
+              fnDelete={handleDelete}
+            />
           </Container>
         </section>
       </MainContent>
