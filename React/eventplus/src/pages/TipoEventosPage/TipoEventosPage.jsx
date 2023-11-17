@@ -8,11 +8,13 @@ import tipoEventoImage from "../../assets/images/images/tipo-evento.svg";
 import { Input, Button } from "../../componentes/FormComponents/FormComponents";
 import api, { eventsTypeResource } from "../../Services/Service";
 import TableTP from "./TableTP/TableTP";
+import Notification from "../../componentes/Notification/Notification";
 
 const TipoEventosPage = () => {
   const [frmEdit, setFrmEdit] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [tipoEventos, setTipoEventos] = useState([]);
+  const [notifyUser, setNotifyUser] = useState();
 
   useEffect(() => {
     //define a chamada em nossa api
@@ -27,9 +29,10 @@ const TipoEventosPage = () => {
     }
     //chama a função/api no carregamento da página/componente
     loadEventsType();
-  }, [tipoEventos]);
+  }, []);
 
-  function handleUpdate() {
+  function handleUpdate(e) {
+    e.preventDefault()
     alert("Bora editar");
   }
 
@@ -51,19 +54,34 @@ const TipoEventosPage = () => {
     }
   }
 
+
   //apaga o tipo de evento na api
   async function handleDelete(idTipoEvento) {
-
-    if(!window.confirm("Confirma a exclusão?")){
+    if (!window.confirm("Confirma a exclusão?")) {
       return;
     }
 
     try {
-      const promise = await api.delete(`${eventsTypeResource}/ ${idTipoEvento}`);
+      const promise = await api.delete(
+        `${eventsTypeResource}/ ${idTipoEvento}`
+      );
 
       if (promise.status == 204) {
-        alert("Cadastro apagado com sucesso")
-        setTipoEventos([]);
+        setNotifyUser({
+          titleNote: "Sucesso",
+          textNote: `Evento excluído com sucesso`,
+          imgIcon: "sucess",
+          imgAlt:
+            "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+          showMessage: true,
+        })
+        // setTipoEventos([]);
+
+        //DESAFIO: fazer uma função psra retirar o registro apagado fo array tipoEventos
+
+        const buscaEventos = await api.get(eventsTypeResource);
+
+        setTipoEventos(buscaEventos.data);
       }
     } catch (error) {
       alert("deu ruim");
@@ -71,17 +89,30 @@ const TipoEventosPage = () => {
   }
 
   //exibe o formulário de edição
-  function showUpdateForm() {
-    alert("Vamos mostrar o formulário de edição de dados");
+  async function showUpdateForm(idTipoEvento) {
+    setFrmEdit(true);
+
+    try {
+      const retorno = await api.get(`${eventsTypeResource}/ ${idTipoEvento}`)
+
+      setTitulo(retorno.data.titulo)
+      console.log(retorno.data);
+      
+    } catch (error) {
+      
+    }
   }
 
   //cancela a tela de edição (volta pra o form de cadastro)
   function editActionAbort() {
-    alert("Cancelar a tela de edição de dados");
+    setFrmEdit(false);
+    setTitulo("")
+    // alert("Cancelar a tela de edição de dados");
   }
 
   return (
     <>
+      {<Notification {...notifyUser} setNotifyUser={setNotifyUser} />}
       <MainContent>
         <section className="cadastro-evento-section">
           <Container>
@@ -93,6 +124,7 @@ const TipoEventosPage = () => {
                 onSubmit={frmEdit ? handleUpdate : handleSubmit}
               >
                 {!frmEdit ? (
+                  //Cadastrar
                   <>
                     <Input
                       id="Titulo"
@@ -114,7 +146,38 @@ const TipoEventosPage = () => {
                     />
                   </>
                 ) : (
-                  <p> Tela de Edição</p>
+                  //Editar
+                  <>
+                    <Input
+                      id="Titulo"
+                      placeholder="Titulo"
+                      name={"titulo"}
+                      type={"text"}
+                      required={"required"}
+                      value={titulo}
+                      fnManipulator={(e) => {
+                        setTitulo(e.target.value);
+                      }}
+                    />
+                    <div className="buttons-editbox">
+                      <Button
+                        textButton="Atualizar"
+                        id="atualizar"
+                        name="atualizar"
+                        type="submit"
+                        additionalClass="button-component--middle"
+                      />
+
+                      <Button
+                        textButton="Cancelar"
+                        id="cancelar"
+                        name="cancelar"
+                        type="button"
+                        additionalClass="button-component--middle"
+                        fnManipulator={editActionAbort}
+                      />
+                    </div>
+                  </>
                 )}
               </form>
             </div>
