@@ -8,21 +8,29 @@ import VisionSection from "../../componentes/VisionSection/VisionSection";
 import Container from "../../componentes/Container/Container";
 import "./HomePage.css";
 import axios from "axios";
-import api from "../../Services/Service";
+import api, { nextEventResource } from "../../Services/Service";
+import Notification from "../../componentes/Notification/Notification";
 
 const HomePage = () => {
   const [nextEvents, setNextEvents] = useState([]);
-
+  const [notifyUser, setNotifyUser] = useState();
 
   useEffect(() => {
     async function getNextEvents() {
       try {
-        const promise =  await api.get(`/Evento/ListarProximos`);
+        const promise = await api.get(nextEventResource);
         const dados = await promise.data;
 
         setNextEvents(dados);
       } catch (error) {
-        alert("deu ruim na api");
+        setNotifyUser({
+          titleNote: "Erro",
+          textNote: `Não foi possível se conectar, verifique sua conexão`,
+          imgIcon: "danger",
+          imgAlt:
+            "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+          showMessage: true,
+        });
       }
     }
     getNextEvents();
@@ -30,6 +38,7 @@ const HomePage = () => {
 
   return (
     <MainContent>
+      {<Notification {...notifyUser} setNotifyUser={setNotifyUser} />}
       <Banner />
       <section className="proximos-eventos">
         <Container>

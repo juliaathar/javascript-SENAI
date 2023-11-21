@@ -9,16 +9,20 @@ import { Input, Button } from "../../componentes/FormComponents/FormComponents";
 import api, { eventsTypeResource } from "../../Services/Service";
 import TableTP from "./TableTP/TableTP";
 import Notification from "../../componentes/Notification/Notification";
+import Spinner from "../../componentes/Spinner/Spinner"
 
 const TipoEventosPage = () => {
   const [frmEdit, setFrmEdit] = useState(false);
   const [titulo, setTitulo] = useState("");
+  const [idEvento, setIdEvento] = useState(null); //para editar, por causa do evento
   const [tipoEventos, setTipoEventos] = useState([]);
   const [notifyUser, setNotifyUser] = useState();
+  const [showSpinner, setShowSpinner] = useState(false) //spinner loading
 
   useEffect(() => {
     //define a chamada em nossa api
     async function loadEventsType() {
+      setShowSpinner(true)
       try {
         const retorno = await api.get(eventsTypeResource);
         setTipoEventos(retorno.data);
@@ -26,21 +30,70 @@ const TipoEventosPage = () => {
       } catch (error) {
         console.log("Erro na api");
       }
+
+      setShowSpinner(false)
     }
     //chama a função/api no carregamento da página/componente
     loadEventsType();
   }, []);
 
-  function handleUpdate(e) {
-    e.preventDefault()
-    alert("Bora editar");
+  async function handleUpdate(e) {
+    e.preventDefault();
+
+    try {
+      //atualizar na api
+      const retorno = await api.put(eventsTypeResource + "/" + idEvento, {
+        titulo:titulo
+      }); // o id está no state. pode fazer assim ou interpolado.
+
+      //reseta o state
+      setTitulo("")
+      setIdEvento(null)
+
+      if (retorno.status === 204) {
+        // notificar o usuario
+        setNotifyUser({
+          titleNote: "Sucesso",
+          textNote: `Evento cadastrado com sucesso`,
+          imgIcon: "success",
+          imgAlt:
+            "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+          showMessage: true,
+        });
+        //atualizar os dados na tela
+
+        const promise = await api.get(eventsTypeResource);
+
+        setTipoEventos(promise.data.titulo)
+
+        //volta para tela de cadastro
+
+        editActionAbort()
+      }
+    } catch (error) {
+      //notificar erro o usuário
+      setNotifyUser({
+        titleNote: "Erro",
+        textNote: `Erro ao editar`,
+        imgIcon: "danger",
+        imgAlt:
+          "Imagem de ilustração de erro",
+        showMessage: true,
+      });
+    }
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     if (titulo.trim().length < 3) {
-      alert("Digite mais que 3 caracteres");
+      setNotifyUser({
+        titleNote: "Aviso",
+        textNote: `O nome deve ter mais que 3 caracteres`,
+        imgIcon: "warning",
+        imgAlt: "Imagem de ilustração de erro",
+        showMessage: true,
+      });
     }
 
     try {
@@ -48,12 +101,24 @@ const TipoEventosPage = () => {
         titulo: titulo,
       });
 
-      alert("Deu bom");
+      setNotifyUser({
+        titleNote: "Sucesso",
+        textNote: `Evento cadastrado com sucesso`,
+        imgIcon: "success",
+        imgAlt:
+          "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
+        showMessage: true,
+      });
     } catch (error) {
-      alert("Deu ruim no submit");
+      setNotifyUser({
+        titleNote: "Erro",
+        textNote: `Tente novamente`,
+        imgIcon: "danger",
+        imgAlt: "Imagem de ilustração de erro",
+        showMessage: true,
+      });
     }
   }
-
 
   //apaga o tipo de evento na api
   async function handleDelete(idTipoEvento) {
@@ -70,11 +135,11 @@ const TipoEventosPage = () => {
         setNotifyUser({
           titleNote: "Sucesso",
           textNote: `Evento excluído com sucesso`,
-          imgIcon: "sucess",
+          imgIcon: "success",
           imgAlt:
             "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok",
           showMessage: true,
-        })
+        });
         // setTipoEventos([]);
 
         //DESAFIO: fazer uma função psra retirar o registro apagado fo array tipoEventos
@@ -91,28 +156,28 @@ const TipoEventosPage = () => {
   //exibe o formulário de edição
   async function showUpdateForm(idTipoEvento) {
     setFrmEdit(true);
+    setIdEvento(idTipoEvento); // preenche o id do evento para poder atualizar
 
     try {
-      const retorno = await api.get(`${eventsTypeResource}/ ${idTipoEvento}`)
+      const retorno = await api.get(`${eventsTypeResource}/ ${idTipoEvento}`);
 
-      setTitulo(retorno.data.titulo)
+      setTitulo(retorno.data.titulo);
       console.log(retorno.data);
-      
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   }
 
   //cancela a tela de edição (volta pra o form de cadastro)
   function editActionAbort() {
     setFrmEdit(false);
-    setTitulo("")
-    // alert("Cancelar a tela de edição de dados");
+    setTitulo("");
+    setIdEvento(null);
   }
 
   return (
     <>
       {<Notification {...notifyUser} setNotifyUser={setNotifyUser} />}
+      {showSpinner ? <Spinner/> : null}
+
       <MainContent>
         <section className="cadastro-evento-section">
           <Container>
@@ -167,7 +232,7 @@ const TipoEventosPage = () => {
                         type="submit"
                         additionalClass="button-component--middle"
                       />
-
+                      <span>{idEvento}</span>
                       <Button
                         textButton="Cancelar"
                         id="cancelar"
