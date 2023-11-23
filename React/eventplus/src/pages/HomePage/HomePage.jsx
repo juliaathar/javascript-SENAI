@@ -23,6 +23,7 @@ const HomePage = () => {
 
         setNextEvents(dados);
       } catch (error) {
+        console.log(error);
         setNotifyUser({
           titleNote: "Erro",
           textNote: `Não foi possível se conectar, verifique sua conexão`,

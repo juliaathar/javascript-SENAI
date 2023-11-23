@@ -3,7 +3,7 @@ import "./TableEvents.css";
 import editPen from "../../../assets/images/images/edit-pen.svg";
 import trashDelete from "../../../assets/images/images/trash-delete.svg";
 
-const TableTP = ({ dados, fnDelete = null, fnUpdate = null }) => {
+const TableEvents = ({ dados, fnDelete = null, fnUpdate = null }) => {
   return (
     <table className="table-data">
       <thead className="table-data__head">
@@ -71,4 +71,4 @@ const TableTP = ({ dados, fnDelete = null, fnUpdate = null }) => {
   );
 };
 
-export default TableTP;
+export default TableEvents;
