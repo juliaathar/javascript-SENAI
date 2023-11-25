@@ -11,6 +11,7 @@ import TableEvents from "../../pages/EventosPage/TableEvents/TableEvents";
 import api, { eventsResource } from "../../Services/Service";
 import { eventsTypeResource } from "../../Services/Service";
 import Notification from "../../componentes/Notification/Notification";
+import Spinner from "../../componentes/Spinner/Spinner";
 
 const EventosPage = () => {
   const [eventos, setEventos] = useState([]);
@@ -23,8 +24,10 @@ const EventosPage = () => {
   const idInstituicao = "1dd19c4d-9812-4d5c-a757-3ba70867ca4b";
   const [frmEdit, setFrmEdit] = useState(false);
   const [notifyUser, setNotifyUser] = useState();
+  const [showSpinner, setShowSpinner] = useState(false)
 
   async function loadEvents() {
+    setShowSpinner(true)
     try {
       const retorno = await api.get(eventsResource);
       const dados = await retorno.data;
@@ -33,9 +36,11 @@ const EventosPage = () => {
     } catch (error) {
       console.log("Deu ruim na api");
     }
+    setShowSpinner(false)
   }
 
   async function loadEventsType() {
+    setShowSpinner(true)
     try {
       const retorno = await api.get(eventsTypeResource);
       const dados = await retorno.data;
@@ -46,6 +51,7 @@ const EventosPage = () => {
       console.log("Deu ruim na api");
       console.log(error);
     }
+    setShowSpinner(false)
   }
 
   useEffect(() => {
@@ -212,6 +218,7 @@ const EventosPage = () => {
   return (
     <>
       {<Notification {...notifyUser} setNotifyUser={setNotifyUser} />}
+      {showSpinner ? <Spinner/> : null}
 
       <MainContent>
         <section className="cadastro-evento-section">

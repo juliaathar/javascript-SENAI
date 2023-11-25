@@ -10,13 +10,16 @@ import "./HomePage.css";
 import axios from "axios";
 import api, { nextEventResource } from "../../Services/Service";
 import Notification from "../../componentes/Notification/Notification";
+import Spinner from "../../componentes/Spinner/Spinner";
 
 const HomePage = () => {
   const [nextEvents, setNextEvents] = useState([]);
   const [notifyUser, setNotifyUser] = useState();
+  const [showSpinner, setShowSpinner] = useState(false);
 
   useEffect(() => {
     async function getNextEvents() {
+      setShowSpinner(true);
       try {
         const promise = await api.get(nextEventResource);
         const dados = await promise.data;
@@ -33,6 +36,7 @@ const HomePage = () => {
           showMessage: true,
         });
       }
+      setShowSpinner(false);
     }
     getNextEvents();
   }, []);
@@ -40,6 +44,7 @@ const HomePage = () => {
   return (
     <MainContent>
       {<Notification {...notifyUser} setNotifyUser={setNotifyUser} />}
+      {showSpinner ? <Spinner/> : null}
       <Banner />
       <section className="proximos-eventos">
         <Container>
@@ -66,30 +71,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-{
-  /* <NextEvent
-title={"C#"}
-description={"Evento de C#"}
-eventDate={"10/10/2023"}
-idEvent={"corinthians"}
-/>
-<NextEvent
-title={"Banco de Dados"}
-description={"Evento de Banco de Dados"}
-eventDate={"10/10/2023"}
-idEvent={"corinthians"}
-/>
-<NextEvent
-title={"React"}
-description={"Evento de React"}
-eventDate={"10/10/2023"}
-idEvent={"corinthians"}
-/>
-<NextEvent
-title={"Cybersecurity"}
-description={"Evento de Cybersecurity"}
-eventDate={"10/10/2023"}
-idEvent={"corinthians"}
-/> */
-}

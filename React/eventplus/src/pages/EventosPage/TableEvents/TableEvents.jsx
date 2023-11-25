@@ -2,6 +2,7 @@ import React from "react";
 import "./TableEvents.css";
 import editPen from "../../../assets/images/images/edit-pen.svg";
 import trashDelete from "../../../assets/images/images/trash-delete.svg";
+import { Tooltip } from 'react-tooltip'
 
 const TableEvents = ({ dados, fnDelete = null, fnUpdate = null }) => {
   return (
@@ -33,8 +34,8 @@ const TableEvents = ({ dados, fnDelete = null, fnUpdate = null }) => {
         {dados.map((t) => {
           return (
             <tr className="table-data__head-row" key={t.idEvento}>
-              <td className="table-data__data table-data__data--big">
-                {t.nomeEvento}
+              <td className="table-data__data table-data__data--big" >
+                {t.nomeEvento }
               </td>
               <td className="table-data__data table-data__data--big">
                 {t.descricao}
