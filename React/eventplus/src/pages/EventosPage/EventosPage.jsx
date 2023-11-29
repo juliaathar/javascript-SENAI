@@ -90,8 +90,11 @@ const EventosPage = () => {
         dataEvento: dataEvento,
         idInstituicao: idInstituicao,
       };
+      console.log(dados);
 
       const retorno = await api.post(eventsResource, dados);
+
+      console.log(retorno);
 
       setNotifyUser({
         titleNote: "Sucesso",
@@ -103,6 +106,7 @@ const EventosPage = () => {
 
       editActionAbort();
     } catch (error) {
+      console.log(error);
       setNotifyUser({
         titleNote: "Erro",
         textNote: "Erro ao cadastrar evento",
