@@ -8,11 +8,19 @@ import "./LoginPage.css";
 import api, { loginResource } from "../../Services/Service";
 //recursos do auth context
 import { UserContext, userDecodeToken } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const LoginPage = () => {
   const [user, setUser] = useState({ email: "julia@gmail.com", senha: "" });
   // importa os dados globais do usuario vindos pelo value do provider
-  const {userData, setUserData} = useContext(UserContext)
+  const { userData, setUserData } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userData.nome) navigate("/")
+  }, [userData]);
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (user.email.length > 3 && user.senha.length > 3) {
@@ -21,14 +29,13 @@ const LoginPage = () => {
           email: user.email,
           senha: user.senha,
         });
-        //decodifica e guarda na const. 
-        const userFullToken = userDecodeToken(promise.data.token)
+        //decodifica e guarda na const.
+        const userFullToken = userDecodeToken(promise.data.token);
 
         //guarda o token globalmente
-        setUserData(userFullToken)
-        localStorage.setItem("token", JSON.stringify(userFullToken))
-
-
+        setUserData(userFullToken);
+        localStorage.setItem("token", JSON.stringify(userFullToken));
+        navigate("/"); //envia o usuario pra home
       } catch (error) {
         //erro da api
         alert("verifique os dados e a conexao com a internet");
