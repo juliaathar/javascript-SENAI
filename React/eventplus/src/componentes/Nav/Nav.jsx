@@ -1,14 +1,17 @@
-import React from "react";
-import './Nav.css';
+import React, { useContext } from "react";
+import "./Nav.css";
 import logoMobile from "../../assets/images/images/logo-white.svg";
 import logoDesktop from "../../assets/images/images/logo-pink.svg";
 import { Link } from "react-router-dom"; //importando componente da biblioteca.
+import { UserContext } from "../../context/AuthContext";
 
 const Nav = ({ exibeNavbar, setExibeNavbar }) => {
+  const { userData } = useContext(UserContext);
+
   console.log(`${exibeNavbar}`);
 
   return (
-    <nav className= {`navbar ${exibeNavbar ? "exibeNavbar" : ""}`}>
+    <nav className={`navbar ${exibeNavbar ? "exibeNavbar" : ""}`}>
       <span
         className="navbar__close"
         onClick={() => {
@@ -27,9 +30,27 @@ const Nav = ({ exibeNavbar, setExibeNavbar }) => {
       </Link>
 
       <div className="navbar__items-box">
-        <Link className="navbar__item" to="/">Home</Link>
-        <Link className="navbar__item" to="/tiposeventos">Tipo de Eventos</Link>
-        <Link className="navbar__item" to="/eventos">Eventos</Link>
+        <Link className="navbar__item" to="/">
+          Home
+        </Link>
+        {userData.nome && userData.role === "Admin" ? (
+          <>
+            <Link className="navbar__item" to="/tiposeventos">
+              Tipo de Eventos
+              <Link className="navbar__item" to="/eventos">
+                Eventos
+              </Link>
+            </Link>
+          </>
+        ) : (
+          userData.nome && userData.role === "Comum" ? (
+            <Link className="navbar__item" to="/eventos">
+            Eventos Aluno
+          </Link>
+          ) : (
+            null
+          )
+        )}
       </div>
     </nav>
   );
