@@ -5,18 +5,16 @@ import logoDesktop from "../../assets/images/images/logo-pink.svg";
 import { Link } from "react-router-dom"; //importando componente da biblioteca.
 import { UserContext } from "../../context/AuthContext";
 
-const Nav = ({ exibeNavbar, setExibeNavbar }) => {
+const Nav = ({ exibeNavbar, setExibeNavbar}) => {
   const { userData } = useContext(UserContext);
-
-  console.log(`${exibeNavbar}`);
 
   return (
     <nav className={`navbar ${exibeNavbar ? "exibeNavbar" : ""}`}>
       <span
-        className="navbar__close"
         onClick={() => {
           setExibeNavbar(false);
         }}
+        className="navbar__close"
       >
         X
       </span>
@@ -42,15 +40,11 @@ const Nav = ({ exibeNavbar, setExibeNavbar }) => {
               </Link>
             </Link>
           </>
-        ) : (
-          userData.nome && userData.role === "Comum" ? (
-            <Link className="navbar__item" to="/eventos">
+        ) : userData.nome && userData.role === "Comum" ? (
+          <Link className="navbar__item" to="/eventos-aluno">
             Eventos Aluno
           </Link>
-          ) : (
-            null
-          )
-        )}
+        ) : null}
       </div>
     </nav>
   );
