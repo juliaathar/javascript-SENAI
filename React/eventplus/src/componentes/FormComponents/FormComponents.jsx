@@ -63,7 +63,7 @@ export const Select = ({
       onChange={fnManipulator}
       defaultValue={defaultValue}
     >
-      <option value="">Tipo Evento</option>
+      <option value="">Selecione</option>
       {options.map((o) => {
         return (
           <option key={Math.random()} value={o.value}>

@@ -39,7 +39,7 @@ const EventosAlunoPage = () => {
         } catch (error) {
           console.log(error);
         }
-      } else {
+      } else if (tipoEvento === "2") {
         //chamar a api dos meus eventos
 
         try {
@@ -57,12 +57,13 @@ const EventosAlunoPage = () => {
         } catch (error) {
           console.log(error);
         }
+      } else {
+        setEventos([]);
       }
+      setShowSpinner(false);
     }
-    setEventos([]);
 
     loadEventsType();
-    setShowSpinner(false);
   }, [tipoEvento]);
 
   async function loadEventsType() {
@@ -73,6 +74,19 @@ const EventosAlunoPage = () => {
       console.log(dados);
     } catch (error) {
       console.log("Deu ruim na api");
+    }
+  }
+
+  const verificaPresenca=(arrAllEvents, eventsUser) => {
+    for (let x = 0; x < array.length; x++) {
+      for (let eventsUser = 0; eventsUser < array.length; eventsUser++) {
+        if (arrAllEvents[x].idEvento === eventsUser[i].idEvento) {
+          arrAllEvents[x].situacao = true
+          break;
+        }
+        
+      }
+      
     }
   }
 
