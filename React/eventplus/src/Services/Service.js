@@ -4,6 +4,7 @@ import axios from "axios";
  * Modulo
  */
 
+export const MyEventsResource = '/PresencasEvento/ListarMinhas'
 
 /**
  * Rota para o recurso Evento

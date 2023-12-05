@@ -6,7 +6,7 @@ import Container from "../../componentes/Container/Container";
 import { Select } from "../../componentes/FormComponents/FormComponents";
 import Spinner from "../../componentes/Spinner/Spinner";
 import Modal from "../../componentes/Modal/Modal";
-import api, { eventsResource } from "../../Services/Service";
+import api, { eventsResource, MyEventsResource } from "../../Services/Service";
 
 import "./EventosAlunoPage.css";
 import { UserContext } from "../../context/AuthContext";
@@ -20,7 +20,7 @@ const EventosAlunoPage = () => {
     { value: 2, text: "Meus eventos" },
   ]);
 
-  const [tipoEvento, setTipoEvento] = useState(1); //código do tipo do Evento escolhido
+  const [tipoEvento, setTipoEvento] = useState("1"); //código do tipo do Evento escolhido
   const [showSpinner, setShowSpinner] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -29,16 +29,36 @@ const EventosAlunoPage = () => {
 
   useEffect(() => {
     async function loadEventsType() {
-      if ((tipoEvento === 1)) {
+      setShowSpinner(true);
+      if (tipoEvento === "1") {
         //chmar a api de todos os eventos
         try {
-          const retorno = await api.get;
-        } catch (error) {}
+          const retorno = await api.get(eventsResource);
+          setEventos(retorno.data);
+          console.log(retorno.data);
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         //chamar a api dos meus eventos
+
+        try {
+          const retorno = await api.get(
+            `${MyEventsResource}/${userData.userId}`
+          );
+
+          const arrEventos = [];
+          retorno.data.forEach((e) => {
+            arrEventos.push(e.evento);
+          });
+
+          console.log(arrEventos);
+          setEventos(arrEventos);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
-    setShowSpinner(true);
     setEventos([]);
 
     loadEventsType();
