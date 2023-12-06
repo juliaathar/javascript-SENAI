@@ -6,7 +6,11 @@ import Container from "../../componentes/Container/Container";
 import { Select } from "../../componentes/FormComponents/FormComponents";
 import Spinner from "../../componentes/Spinner/Spinner";
 import Modal from "../../componentes/Modal/Modal";
-import api, { eventsResource, MyEventsResource } from "../../Services/Service";
+import api, {
+  eventsResource,
+  MyEventsResource,
+  presencesEventsResource,
+} from "../../Services/Service";
 
 import "./EventosAlunoPage.css";
 import { UserContext } from "../../context/AuthContext";
@@ -33,9 +37,23 @@ const EventosAlunoPage = () => {
       if (tipoEvento === "1") {
         //chmar a api de todos os eventos
         try {
-          const retorno = await api.get(eventsResource);
-          setEventos(retorno.data);
-          console.log(retorno.data);
+          const todosEventos = await api.get(eventsResource);
+          const meusEventos = await api.get(
+            `${MyEventsResource}/${userData.userId}`
+          );
+          const eventosMarcados = verificaPresenca(
+            todosEventos.data,
+            meusEventos.data
+          );
+          setEventos(eventosMarcados);
+
+          console.clear();
+          console.log("todos os eventos");
+          console.log(todosEventos.data);
+          console.log("meus os eventos");
+          console.log(meusEventos.data);
+          console.log("eventos marcados");
+          console.log(eventosMarcados);
         } catch (error) {
           console.log(error);
         }
@@ -49,7 +67,7 @@ const EventosAlunoPage = () => {
 
           const arrEventos = [];
           retorno.data.forEach((e) => {
-            arrEventos.push(e.evento);
+            arrEventos.push({ ...e.evento, situacao: e.situacao });
           });
 
           console.log(arrEventos);
@@ -77,18 +95,19 @@ const EventosAlunoPage = () => {
     }
   }
 
-  const verificaPresenca=(arrAllEvents, eventsUser) => {
-    for (let x = 0; x < array.length; x++) {
-      for (let eventsUser = 0; eventsUser < array.length; eventsUser++) {
-        if (arrAllEvents[x].idEvento === eventsUser[i].idEvento) {
-          arrAllEvents[x].situacao = true
+  const verificaPresenca = (arrAllEvents, eventsUser) => {
+    for (let x = 0; x < arrAllEvents.length; x++) {
+      for (let i = 0; i < eventsUser.length; i++) {
+        if (
+          arrAllEvents[x].idPresencaEvento === eventsUser[i].evento.idEvento
+        ) {
+          arrAllEvents[x].situacao = true;
           break;
         }
-        
       }
-      
     }
-  }
+    return arrAllEvents; //retorna todos os eventos marcados com a prsença do usuário
+  };
 
   // toggle meus eventos ou todos os eventos
   function myEvents(tpEvent) {
@@ -107,8 +126,33 @@ const EventosAlunoPage = () => {
     alert("Remover o comentário");
   };
 
-  function handleConnect() {
-    alert("Desenvolver a função conectar evento");
+  async function handleConnect(eventId, whatTheFunction, presencaId = null) {
+    if (whatTheFunction === "connect") {
+      try {
+        const promise = await api.post(presencesEventsResource, {
+          situacao: true,
+          idUsuario: userData.userId,
+          idEvento: eventId,
+        });
+        if (promise.status === 201) {
+          alert("eba, agora voce podera participar do evento");
+        }
+        // setTipoEvento(1)
+        const todosEventos = await api.get(eventsResource);
+        setEventos(todosEventos.data);
+      } catch (error) {}
+      return;
+    }
+
+    try {
+      const unconnected = await api.delete(
+        `${presencesEventsResource}/${presencaId}`
+      );
+      if (unconnected.status === 204) {
+        const todosEventos = await api.get(eventsResource);
+        setEventos(todosEventos.data);
+      }
+    } catch (error) {}
   }
   return (
     <>
