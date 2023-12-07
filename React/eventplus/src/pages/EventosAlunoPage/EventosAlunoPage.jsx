@@ -67,7 +67,7 @@ const EventosAlunoPage = () => {
 
           const arrEventos = [];
           retorno.data.forEach((e) => {
-            arrEventos.push({ ...e.evento, situacao: e.situacao });
+            arrEventos.push({ ...e.evento, situacao: e.situacao, idPresencaEvento: e.idPresencaEvento });
           });
 
           console.log(arrEventos);
@@ -102,6 +102,7 @@ const EventosAlunoPage = () => {
           arrAllEvents[x].idPresencaEvento === eventsUser[i].evento.idEvento
         ) {
           arrAllEvents[x].situacao = true;
+          arrAllEvents[x].idPresencaEvento = eventsUser[i].idPresencaEvento
           break;
         }
       }
@@ -114,7 +115,10 @@ const EventosAlunoPage = () => {
     setTipoEvento(tpEvent);
   }
 
-  async function loadMyComentary(idComentary) {
+  async function loadMyCommentary(idComentary) {
+    return "????";
+  }
+  async function postMyCommentary(idComentary) {
     return "????";
   }
 
@@ -128,18 +132,19 @@ const EventosAlunoPage = () => {
 
   async function handleConnect(eventId, whatTheFunction, presencaId = null) {
     if (whatTheFunction === "connect") {
+      
       try {
         const promise = await api.post(presencesEventsResource, {
           situacao: true,
           idUsuario: userData.userId,
           idEvento: eventId,
         });
+
         if (promise.status === 201) {
+          loadEventsType();
           alert("eba, agora voce podera participar do evento");
         }
-        // setTipoEvento(1)
-        const todosEventos = await api.get(eventsResource);
-        setEventos(todosEventos.data);
+
       } catch (error) {}
       return;
     }
@@ -149,10 +154,13 @@ const EventosAlunoPage = () => {
         `${presencesEventsResource}/${presencaId}`
       );
       if (unconnected.status === 204) {
-        const todosEventos = await api.get(eventsResource);
-        setEventos(todosEventos.data);
+        // const todosEventos = await api.get(eventsResource);
+        // setEventos(todosEventos.data);
+        loadEventsType()
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log("Erro ao desconectar o usuario do evento");
+    }
   }
   return (
     <>
@@ -186,6 +194,8 @@ const EventosAlunoPage = () => {
         <Modal
           userId={userData.userId}
           showHideModal={showHideModal}
+          fnGet={loadMyCommentary}
+          fnPost={postMyCommentary}
           fnDelete={commentaryRemove}
         />
       ) : null}
